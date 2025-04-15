@@ -1,0 +1,20 @@
+{
+  "name": "catalog-exam",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 3000",
+    "update": "sh update.sh"
+  },
+  "dependencies": {
+    "vue": "^3.5.13",
+    "vite": "^6.2.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.3",
+    "vite-plugin-vue-devtools": "^7.7.2"
+  }
+}
