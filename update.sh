@@ -4,7 +4,7 @@
 
 # 下载带用户名和密码的链接
 # git clone https://github.com/jaimly/catalog-exam.git
-# git remote set-url origin https://github.com/jaimly/catalog-exam.git
+# git remote add origin git@github.com:jaimly/catalog-exam.git
 
 Project=catalog-exam
 
