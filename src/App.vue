@@ -2,35 +2,50 @@
 import { ref, nextTick } from 'vue';
 import { questions, answers } from './data.json';
 
-let index = handlerLocalData(-1);
-let question = ref('');
+let index = handlerLocalData();
+let question = ref();
 let questionLen = ref();
 let qFontSize = ref();
 let qOpacity = ref();
-let btnName = ref('');
+let nextBtnName = ref('');
 let nextBtnDisable = ref();
 let prevBtnDisable = ref();
 let answer = ref('');
 let answerBtnDisable = ref();
 let answerHidden = ref();
-reset();
+init();
 
-async function reset () { 
-  index = handlerLocalData(-1);
-  questionLen.value = questions.length;
-  question.value = '请“开始”';
+function init () {
+  if(index < 0) return reset();
+  question.value = questions[index];
+  questionLen.value = questions.length - index - 1;
   qFontSize.value = 10;
   qOpacity.value = 1;
-  btnName.value = '开始';
+  nextBtnName.value = '下一题';
+  nextBtnDisable.value = !Boolean(questionLen.value);
+  prevBtnDisable.value = !Boolean(index > 0);
+  answer.value = answers[index];
+  answerHidden.value = true;
+  answerBtnDisable.value = false;
+}
+
+function reset () { 
+  index = handlerLocalData(-1);
+  question.value = '请“开始”';
+  questionLen.value = questions.length;
+  qFontSize.value = 10;
+  qOpacity.value = 1;
+  nextBtnName.value = '开始';
   nextBtnDisable.value = false;
   prevBtnDisable.value = true;
+  answer.value = '';
   answerHidden.value = true;
   answerBtnDisable.value = true;
 }
 
 async function nextQuestion() {
-  if(btnName.value === '开始') {
-    btnName.value = '下一题';
+  if(nextBtnName.value === '开始') {
+    nextBtnName.value = '下一题';
     answerBtnDisable.value = true;
   }
   if(++index == questions.length-1) nextBtnDisable.value = true;
@@ -39,20 +54,23 @@ async function nextQuestion() {
   questionLen.value = questionLen.value - 1;
   qFontSize.value = 10;
   qOpacity.value = 1;
+  answer.value = answers[index];
   answerHidden.value = true;
   answerBtnDisable.value = false;
-  answer.value = answers[index];
+  handlerLocalData(index);
 }
 
 async function prevQuestion() {
+  nextBtnDisable.value = false;
   if(--index == 0) prevBtnDisable.value = true;
   question.value = questions[index];
   questionLen.value = questionLen.value + 1;
   qFontSize.value = 10;
   qOpacity.value = 1;
+  answer.value = answers[index];
   answerHidden.value = true;
   answerBtnDisable.value = false;
-  answer.value = answers[index];
+  handlerLocalData(index);
 }
 
 async function showAnswer () {
@@ -69,6 +87,7 @@ function handlerLocalData (data) {
   }
   const ldata = localStorage.getItem(key);
   if(ldata) return ldata;
+  return -1;
 }
 </script>
 
@@ -78,7 +97,7 @@ function handlerLocalData (data) {
     <h1 :hidden='answerHidden'>{{ answer }}</h1>
     <div class="foot">
       <button class="resetBtn" @click="prevQuestion()" :disabled='prevBtnDisable'>上一题</button>
-      <button class="startBtn" @click="nextQuestion()" :disabled='nextBtnDisable'>{{ btnName }}</button>
+      <button class="startBtn" @click="nextQuestion()" :disabled='nextBtnDisable'>{{ nextBtnName }}</button>
       <button class="answerBtn" @click="showAnswer()" :disabled='answerBtnDisable'>答案</button>
       <div class="reset">
         <p>剩余题数：{{questionLen}}</p>
