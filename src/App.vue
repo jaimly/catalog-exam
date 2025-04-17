@@ -1,6 +1,7 @@
 <script setup>
-import { ref, nextTick } from 'vue';
+import { ref } from 'vue';
 import { questions, answers } from './data.json';
+import Step from './comp/Step.vue';
 
 let index = handlerLocalData();
 let question = ref();
@@ -13,6 +14,11 @@ let prevBtnDisable = ref();
 let answer = ref('');
 let answerBtnDisable = ref();
 let answerHidden = ref();
+let stepRefA = ref();
+let stepRefB = ref();
+let stepRefC = ref();
+let stepRefD = ref();
+let stepRefE = ref();
 init();
 
 function init () {
@@ -79,6 +85,14 @@ async function showAnswer () {
   qOpacity.value = answerHidden.value ? 1 : 0.6;
 }
 
+async function stepHandle() {
+  stepRefA.value.add();
+  stepRefB.value.add();
+  stepRefC.value.add();
+  stepRefD.value.add();
+  stepRefE.value.add();
+}
+
 function handlerLocalData (data) {
   const key = 'question_index';
   if(typeof data === 'number') {
@@ -93,6 +107,14 @@ function handlerLocalData (data) {
 
 <template>
   <main>
+    <div class="score">
+      <button @click="stepHandle()">All +</button>
+      <h2>A组: <Step name="scoreA" ref="stepRefA"/></h2>
+      <h2>B组: <Step name="scoreB" ref="stepRefB"/></h2>
+      <h2>C组: <Step name="scoreC" ref="stepRefC"/></h2>
+      <h2>D组: <Step name="scoreD" ref="stepRefD"/></h2>
+      <h2>E组: <Step name="scoreE" ref="stepRefE"/></h2>
+    </div>
     <h1 :style="{fontSize: qFontSize + 'vw', opacity: qOpacity}">{{ question }}</h1>
     <h1 :hidden='answerHidden'>{{ answer }}</h1>
     <div class="foot">
@@ -115,6 +137,20 @@ main {
   height: inherit;
   justify-content: space-evenly;
   width: 100%;
+  height: 100%;
+}
+
+.score {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+}
+
+.score button {
+  width: 50px;
+  height: 30px;
 }
 
 .foot {
